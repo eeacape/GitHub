@@ -28,6 +28,8 @@
 #SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ####
 
+import datetime
+import openpyxl
 
 def main():
     get_input_process()
@@ -44,11 +46,48 @@ def get_input_process():
     quant = input("Quantity: ")
     status = input("Status: ")
     yoinit = input("Your initials: ")
+    snfile = input("File name with serial numbers: ")
+
+    csv_column_headers = get_column_headers()
+    b_file_name = get_fname_format()
+    serial_numbers = read_excel_file(snfile)
+
+    mydate = datetime.date.today().strftime('%d%m%Y')
+
+    final_file_name = cname + '_' + mydate + "_" + yoinit + "-" + b_file_name
+    
 
 
 
-def get_serial_numbers():
-    pass
+def get_column_headers():
+
+    # The Column name needed for the ingesting of data by dataloader.
+    col_names = ('ACCOUNTID','CONTACTID','DESCRIPTION','NAME','OPPORTUNITY__C','PRODUCT2ID','PURCHASEDATE','QUANTITY','SERIALNUMBER','STATUS')
+
+    column_headers = col_names[0] + "," + col_names[1] + "," + col_names[2] + "," + col_names[3] + "," + col_names[4] + "," + col_names[5] + "," + col_names[6] + "," + col_names[7] + "," + col_names[8] + "," + col_names[9]
+
+    return str(column_headers)
+
+def get_fname_format():
+
+    # The base file name will be taken and changed to reflect the customer,date and initials.
+    # See example below.
+    # Example might be "TAB_15052023_SN-AOPEN-ANZ-Salesforce-Assets-PRODUCTION-Insert.csv" 
+    base_file_name = 'AOPEN-ANZ-Salesforce-Assets-PRODUCTION-Insert.xlsx'
+
+    return str(base_file_name)
+
+def read_excel_file(snfile):
+    wb = openpyxl.load_workbook(snfile)
+    sheet = wb.active
+    data = []
+    for row in sheet.rows:
+        data_row = []
+        for cell in row:
+            if cell.value:
+                data_row.append(cell.value)
+        data.append(data_row)
+    return data
 
 
 if __name__ == '__main__':
