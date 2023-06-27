@@ -1,5 +1,6 @@
 #Name: prep-csv-for-dataloader.py
-#Ref: -
+#Ref: A way to automate the curating of the CSV file to be used by dataloader
+#     was required.  This script enables this to be done.
 #Copyright (c) 2023. CPEREIRA. All Rights Reserved.
 #
 #Redistribution and use in source and binary forms, with or without modification,
@@ -29,10 +30,9 @@
 ####
 
 import datetime
+import sys
+import os
 import openpyxl
-
-def main():
-    get_input_process()
 
 def get_input_process():
     
@@ -40,9 +40,9 @@ def get_input_process():
     accid = input("Account Id (Salesforce format): ")
     contid = input("Contact Id (Salesforce format): ")
     descr = input("Description: ")
-    oppor = input("Opportunity (Salesforce format) :")
+    oppor = input("Opportunity (Salesforce format): ")
     proid = input("Product Id (Salesforce format): ")
-    pdate = input("Purchase date (YYYY-MM-DD) :")
+    pdate = input("Purchase date (YYYY-MM-DD): ")
     quant = input("Quantity: ")
     status = input("Status: ")
     yoinit = input("Your initials: ")
@@ -55,9 +55,19 @@ def get_input_process():
     mydate = datetime.date.today().strftime('%d%m%Y')
 
     final_file_name = cname + '_' + mydate + "_" + yoinit + "-" + b_file_name
+
+    if os.path.exists(final_file_name):
+        os.rename(final_file_name, str(datetime.datetime.now().strftime("[%H%M%S]-") + final_file_name))
     
-
-
+    try:
+        with open(final_file_name, 'w') as file:
+            file.write("{}\n".format(csv_column_headers))
+            for serialnumber in serial_numbers:
+                file.write("{},{},{},{},{},{},{},{},{},{}\n".format(accid,contid,descr,serialnumber[0],oppor,proid,pdate,quant,serialnumber[0],status))
+        file.close()
+    except FileNotFoundError:
+        print("Error: {} is not accessible.  Exiting".format(final_file_name))
+        sys.exit()
 
 def get_column_headers():
 
@@ -73,7 +83,7 @@ def get_fname_format():
     # The base file name will be taken and changed to reflect the customer,date and initials.
     # See example below.
     # Example might be "TAB_15052023_SN-AOPEN-ANZ-Salesforce-Assets-PRODUCTION-Insert.csv" 
-    base_file_name = 'AOPEN-ANZ-Salesforce-Assets-PRODUCTION-Insert.xlsx'
+    base_file_name = 'AOPEN-ANZ-Salesforce-Assets-PRODUCTION-Insert.csv'
 
     return str(base_file_name)
 
@@ -89,6 +99,8 @@ def read_excel_file(snfile):
         data.append(data_row)
     return data
 
+def main():
+    get_input_process()
 
 if __name__ == '__main__':
     main()
