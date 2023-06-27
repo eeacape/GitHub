@@ -52,6 +52,10 @@ def get_input_process():
     b_file_name = get_fname_format()
     serial_numbers = read_excel_file(snfile)
 
+    serial_count = len(serial_numbers)
+
+    print("{} serial numbers retrieved from {}".format(serial_count, snfile))
+
     mydate = datetime.date.today().strftime('%d%m%Y')
 
     final_file_name = cname + '_' + mydate + "_" + yoinit + "-" + b_file_name
@@ -88,15 +92,19 @@ def get_fname_format():
     return str(base_file_name)
 
 def read_excel_file(snfile):
-    wb = openpyxl.load_workbook(snfile)
-    sheet = wb.active
-    data = []
-    for row in sheet.rows:
-        data_row = []
-        for cell in row:
-            if cell.value:
-                data_row.append(cell.value)
-        data.append(data_row)
+    try:
+        wb = openpyxl.load_workbook(snfile)
+        sheet = wb.active
+        data = []
+        for row in sheet.rows:
+            data_row = []
+            for cell in row:
+                if cell.value:
+                    data_row.append(cell.value)
+            data.append(data_row)
+    except FileNotFoundError:
+        print("Error: {} does not exist in current directory.  Exiting".format(snfile))
+        sys.exit()
     return data
 
 def main():
