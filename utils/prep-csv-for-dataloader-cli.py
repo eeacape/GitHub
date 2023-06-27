@@ -54,7 +54,7 @@ def get_input_process():
 
     serial_count = len(serial_numbers)
 
-    print("{} serial numbers retrieved from {}".format(serial_count, snfile))
+    print("Info:>> {} serial numbers retrieved from {}".format(serial_count, snfile))
 
     mydate = datetime.date.today().strftime('%d%m%Y')
 
@@ -72,6 +72,8 @@ def get_input_process():
     except FileNotFoundError:
         print("Error: {} is not accessible.  Exiting".format(final_file_name))
         sys.exit()
+    
+    return(final_file_name)
 
 def get_column_headers():
 
@@ -108,7 +110,8 @@ def read_excel_file(snfile):
     return data
 
 def main():
-    get_input_process()
+    file_process_done = get_input_process()
+    print("Info:>> CSV file {} created and ready for processing with dataloader. \nScript completed.".format(file_process_done))
 
 if __name__ == '__main__':
     main()
