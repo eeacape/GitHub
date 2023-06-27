@@ -34,15 +34,16 @@ def main():
 
 def get_input_process():
     
-    print("Customer Name: ")
-    print("Account Id (Salesforce format): ")
-    print("Contact Id (Salesforce format): ")
-    print("Description: ")
-    print("Opportunity (Salesforce format) :")
-    print("Product Id (Salesforce format): ")
-    print("Purchase date (YYYY-MM-DD) :")
-    print("Quantity: ")
-    print("Status: ")
+    cname = input("Customer Name: ")
+    accid = input("Account Id (Salesforce format): ")
+    contid = input("Contact Id (Salesforce format): ")
+    descr = input("Description: ")
+    oppor = input("Opportunity (Salesforce format) :")
+    proid = input("Product Id (Salesforce format): ")
+    pdate = input("Purchase date (YYYY-MM-DD) :")
+    quant = input("Quantity: ")
+    status = input("Status: ")
+    yoinit = input("Your initials: ")
 
 
 
